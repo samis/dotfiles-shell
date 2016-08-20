@@ -1,0 +1,8 @@
+*
+!/.gitignore.d
+!/.gitignore.d/shell
+!/.bash_logout
+!/.bash_profile
+!/.bashrc
+!/.profile
+!/.zshrc
