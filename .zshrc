@@ -98,4 +98,41 @@ alias ind=in-dotfiles
 eval $(gpg-agent --daemon --enable-ssh-support)
 # GNUstep application root
 export GNUSTEP_USER_ROOT="${HOME}/GNUstep"
-. /home/samis/.nix-profile/etc/profile.d/nix.sh
+
+# Add to the path variable named by $1 the component $2.  $3 must be
+# "append" or "prepend" to indicate where the component is added.
+addpath () {
+    eval value=\"\$$1\"
+    case "$value" in
+        *:$2:*|*:$2|$2:*|$2)
+            result="$value"
+            ;;
+        "")
+            export $1
+            result="$2"
+            ;;
+        *)
+            case "$3" in
+                p*)
+                    result="$2:${value}"
+                    ;;
+                *)
+                    result="${value}:$2"
+                    ;;
+            esac
+    esac
+    eval $1=$result
+    unset result value
+}
+
+# convenience routine which appends a string to a path.
+append () {
+    addpath "$1" "$2" append
+}
+
+# convenience routine which prepends a string to a path.
+prepend () {
+    addpath "$1" "$2" prepend
+}
+append PATH /home/samis/.gem/ruby/2.1.0/bin
+prepend PATH /home/samis/bin
